@@ -25,13 +25,10 @@ load_dotenv()
 # Patches image capability using your 3-node reducer flow:
 #   merge_content -> decide_images -> generate_and_place_images
 # ============================================================
-try:
-    import streamlit as st
-
-    def get_secret(key):
-        return st.secrets.get(key, os.getenv(key))
-except Exception:
-    def get_secret(key):
+def get_secret(key: str):
+    try:
+        return st.secrets[key]
+    except Exception:
         return os.getenv(key)
 
 # Set environment variables so all libraries can read them
