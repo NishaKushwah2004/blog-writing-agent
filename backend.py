@@ -16,6 +16,8 @@ from langchain_groq import ChatGroq
 from langchain_core.messages import SystemMessage, HumanMessage
 from dotenv import load_dotenv
 
+import streamlit as st
+
 load_dotenv()
 
 # ============================================================
@@ -23,7 +25,24 @@ load_dotenv()
 # Patches image capability using your 3-node reducer flow:
 #   merge_content -> decide_images -> generate_and_place_images
 # ============================================================
+try:
+    import streamlit as st
 
+    def get_secret(key):
+        return st.secrets.get(key, os.getenv(key))
+except Exception:
+    def get_secret(key):
+        return os.getenv(key)
+
+# Set environment variables so all libraries can read them
+os.environ["GROQ_API_KEY"] = get_secret("GROQ_API_KEY") or ""
+os.environ["TAVILY_API_KEY"] = get_secret("TAVILY_API_KEY") or ""
+os.environ["GOOGLE_API_KEY"] = get_secret("GOOGLE_API_KEY") or ""
+
+os.environ["LANGSMITH_API_KEY"] = get_secret("LANGSMITH_API_KEY") or ""
+os.environ["LANGSMITH_TRACING"] = get_secret("LANGSMITH_TRACING") or "false"
+os.environ["LANGSMITH_PROJECT"] = get_secret("LANGSMITH_PROJECT") or ""
+os.environ["LANGSMITH_ENDPOINT"] = get_secret("LANGSMITH_ENDPOINT") or ""
 
 # -----------------------------
 # 1) Schemas
